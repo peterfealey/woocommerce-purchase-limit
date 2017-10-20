@@ -50,7 +50,7 @@ function check_total() {
     }
 }
 
-function sv_disable_repeat_purchase( $purchasable, $product ) {
+function kc_disable_repeat_purchase( $purchasable, $product ) {
 	
 	// Get the ID for the current product (passed in)
 	$product_id = $product->is_type( 'variation' ) ? $product->variation_id : $product->id;
@@ -80,13 +80,13 @@ function sv_disable_repeat_purchase( $purchasable, $product ) {
     
     return $purchasable;
 }
-add_filter( 'woocommerce_variation_is_purchasable', 'sv_disable_repeat_purchase', 10, 2 );
-add_filter( 'woocommerce_is_purchasable', 'sv_disable_repeat_purchase', 10, 2 );
+add_filter( 'woocommerce_variation_is_purchasable', 'kc_disable_repeat_purchase', 10, 2 );
+add_filter( 'woocommerce_is_purchasable', 'kc_disable_repeat_purchase', 10, 2 );
 
 /**
  * Shows a "purchase disabled" message to the customer
  */
-function sv_purchase_disabled_message() {
+function kc_purchase_disabled_message() {
 	
 	// Get the current product to check if purchasing should be disabled
 	global $product;
@@ -112,7 +112,7 @@ function sv_purchase_disabled_message() {
 		
 		// Render the purchase restricted message if we are
 		if ( wc_customer_bought_product( get_current_user()->user_email, get_current_user_id(), $no_repeats_id ) ) {
-			sv_render_variation_non_purchasable_message( $product, $no_repeats_id );
+			kc_render_variation_non_purchasable_message( $product, $no_repeats_id );
 		}
 		
 	} elseif ( $no_repeats_id === $product->id ) {
@@ -122,7 +122,7 @@ function sv_purchase_disabled_message() {
 		}
 	}
 }
-add_action( 'woocommerce_single_product_summary', 'sv_purchase_disabled_message', 31 );
+add_action( 'woocommerce_single_product_summary', 'kc_purchase_disabled_message', 31 );
 
 
 /**
@@ -131,7 +131,7 @@ add_action( 'woocommerce_single_product_summary', 'sv_purchase_disabled_message'
  * @param \WC_Product $product the WooCommerce product
  * @param int $no_repeats_id the id of the non-purchasable product
  */
-function sv_render_variation_non_purchasable_message( $product, $no_repeats_id ) {
+function kc_render_variation_non_purchasable_message( $product, $no_repeats_id ) {
 	
 	// Double-check we're looking at a variable product
 	if ( $product->is_type( 'variable' ) && $product->has_child() ) {
